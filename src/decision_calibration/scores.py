@@ -1,7 +1,7 @@
 """Forecast scores per forecast-observation pair (DataArrays): CRPS, PIT, ensemble variance, squared error.
 
 Spread and RMSE are aggregates: sqrt of the mean ensemble_variance / squared_error over the pairs.
-compute_scores combines them with the decision costs into the per-pair Dataset of one forecast system (scores.nc).
+compute_scores combines them with the decision costs into the per-pair Dataset of one forecast system.
 """
 import xarray as xr
 from properscoring import crps_ensemble
@@ -10,7 +10,7 @@ from decision_calibration.decisions import decision_costs_sweep
 
 
 def compute_scores(task_cls, params, ens, obs, ens_task=None, obs_task=None, member_dim='member'):
-    """Per-pair decisions, costs and forecast scores of one forecast system in one Dataset (scores.nc).
+    """Per-pair decisions, costs and forecast scores of one forecast system in one Dataset.
 
     task_cls, params: as in decision_costs_sweep (list values are swept).
     Forecast scores on ens / obs, decisions on the task variable ens_task / obs_task (default: ens / obs),

@@ -1,4 +1,4 @@
-"""Aggregate metrics from the per-pair scores (scores.nc): the numbers behind the figures."""
+"""Aggregate metrics from the per-pair scores (output of compute_scores): the numbers behind the figures."""
 import numpy as np
 import pandas as pd
 import xarray as xr

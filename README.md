@@ -78,6 +78,8 @@ Forecasts and observations as xarray DataArrays; the ensemble has an extra `memb
    the forecast scores (e.g. wind power vs. wind speed), pass it as `ens_task` / `obs_task`.
 2. **Aggregates:** `compute_metrics(scores)` computes the decision scores (C_obs, C_gap) and the forecast scores
    per task parameter and lead time: means over space and time, per chosen action, or over time only (maps).
+   It expects the dims `lat`, `lon` and `time` (plus e.g. `lead`); an optional boolean `keep` coordinate
+   (`lat`, `lon`) restricts the evaluated grid points.
 
 ```python
 import decision_calibration as dc
