@@ -13,7 +13,6 @@ requires-python = ">=3.10"
 dependencies = ["numpy", "pandas", "properscoring", "xarray"]
 
 [project.optional-dependencies]
-example = ["matplotlib", "jupyter"]
 paper = ["matplotlib", "cartopy", "jupyter"]
 
 [tool.setuptools.packages.find]
