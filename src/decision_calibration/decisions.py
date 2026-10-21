@@ -1,5 +1,6 @@
 """Bayes decisions from ensemble forecasts and their expected and observed costs."""
 from functools import partial
+from itertools import product
 
 import numpy as np
 import xarray as xr
@@ -44,3 +45,19 @@ def decision_costs_xr(task, ens, obs, member_dim='member'):
                                       input_core_dims=[[member_dim]], output_core_dims=[[], []])
     obs_cost = xr.apply_ufunc(task.cost, action, obs, join='exact')
     return xr.Dataset(dict(action=action, exp_cost=exp_cost, obs_cost=obs_cost))
+
+
+def decision_costs_sweep(task_cls, params, ens, obs, member_dim='member'):
+    """decision_costs_xr for every combination of task parameters, one dim per swept parameter.
+
+    params: {name: value}; a list value is swept (becomes a dim, sorted ascending), anything else is fixed,
+    e.g. dict(threshold=[-2, 0, 2], cost_ratio=[0.3, 0.7], gap_size=3).
+    """
+    swept = {k: v for k, v in params.items() if isinstance(v, list)}
+    fixed = {k: v for k, v in params.items() if k not in swept}
+    results = []
+    for values in product(*swept.values()):
+        kw = dict(zip(swept, values))
+        ds = decision_costs_xr(task_cls(**fixed, **kw), ens, obs, member_dim)
+        results.append(ds.expand_dims({k: [v] for k, v in kw.items()}))
+    return xr.combine_by_coords(results)

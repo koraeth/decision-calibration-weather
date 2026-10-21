@@ -10,7 +10,7 @@ readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "Kornelius Raeth"}]
 requires-python = ">=3.10"
-dependencies = ["numpy", "xarray"]
+dependencies = ["numpy", "pandas", "properscoring", "xarray"]
 
 [project.optional-dependencies]
 example = ["matplotlib", "jupyter"]
