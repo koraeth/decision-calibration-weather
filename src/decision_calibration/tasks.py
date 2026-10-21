@@ -21,17 +21,17 @@ def _check_actions(a, n_actions):
 class FrostTask:
     """Frost protection, y = 2 m temperature (degC). a = 0: no protection, a = 1: protect.
 
-    Cost ramps linearly over [threshold, threshold + gap_size]: missed frost costs up to
-    10 * cost_ratio, needless protection up to 10 * (1 - cost_ratio).
+    Cost changes linearly over [threshold, threshold + transition_width] (the buffer in the paper):
+    missed frost costs up to 10 * cost_ratio, needless protection up to 10 * (1 - cost_ratio).
     """
     threshold: float
     cost_ratio: float
-    gap_size: float = 3.0
+    transition_width: float = 3.0
     n_actions = 2
 
     def cost(self, a, y):
         a = _check_actions(a, self.n_actions)
-        ramp = np.clip((np.asarray(y, dtype=float) - self.threshold) / self.gap_size, 0, 1)
+        ramp = np.clip((np.asarray(y, dtype=float) - self.threshold) / self.transition_width, 0, 1)
         return np.where(a == 1,
                         (1 - self.cost_ratio) * 10 * ramp,
                         self.cost_ratio * 10 * (1 - ramp))
@@ -41,12 +41,12 @@ class FrostTask:
 class HeatTask:
     """Heat protection, y = 2 m temperature (degC). a = 0: no protection, a = 1: protect.
 
-    Cost ramps linearly over [threshold - gap_size, threshold]: missed heat costs up to
-    10 * cost_ratio, needless protection up to 10 * (1 - cost_ratio).
+    Cost changes linearly over [threshold - transition_width, threshold] (the buffer in the paper):
+    missed heat costs up to 10 * cost_ratio, needless protection up to 10 * (1 - cost_ratio).
     """
     threshold: float
     cost_ratio: float
-    gap_size: float = 3.0
+    transition_width: float = 3.0
     n_actions = 2
 
     def cost(self, a, y):
@@ -54,8 +54,8 @@ class HeatTask:
         y = np.asarray(y, dtype=float)
         # two ramps written separately (not 1 - ramp) to keep the paper's floating-point results
         return np.where(a == 1,
-                        (1 - self.cost_ratio) * 10 * np.clip((self.threshold - y) / self.gap_size, 0, 1),
-                        np.clip((y - (self.threshold - self.gap_size)) / self.gap_size, 0, 1) * self.cost_ratio * 10)
+                        (1 - self.cost_ratio) * 10 * np.clip((self.threshold - y) / self.transition_width, 0, 1),
+                        np.clip((y - (self.threshold - self.transition_width)) / self.transition_width, 0, 1) * self.cost_ratio * 10)
 
 
 @dataclass

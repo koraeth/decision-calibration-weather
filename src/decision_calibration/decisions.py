@@ -51,7 +51,7 @@ def decision_costs_sweep(task_cls, params, ens, obs, member_dim='member'):
     """decision_costs_xr for every combination of task parameters, one dim per swept parameter.
 
     params: {name: value}; a list value is swept (becomes a dim, sorted ascending), anything else is fixed,
-    e.g. dict(threshold=[-2, 0, 2], cost_ratio=[0.3, 0.7], gap_size=3).
+    e.g. dict(threshold=[-2, 0, 2], cost_ratio=[0.3, 0.7], transition_width=3).
     """
     swept = {k: v for k, v in params.items() if isinstance(v, list)}
     fixed = {k: v for k, v in params.items() if k not in swept}
