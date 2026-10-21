@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decision-calibration"
+version = "0.1.0"
+description = "Decision calibration of ensemble weather forecasts: Bayes decisions and their expected and observed costs"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "Kornelius Raeth"}]
+requires-python = ">=3.10"
+dependencies = ["numpy", "xarray"]
+
+[project.optional-dependencies]
+example = ["matplotlib", "jupyter"]
+paper = ["matplotlib", "cartopy", "jupyter"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
