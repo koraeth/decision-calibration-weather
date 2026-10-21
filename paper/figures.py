@@ -1,4 +1,4 @@
-"""Paper figures from metrics.nc (output of metrics.compute_metrics)."""
+"""Paper figures from the metrics of a run (output of decision_calibration.compute_metrics)."""
 from itertools import product
 
 import cartopy
@@ -13,7 +13,7 @@ SKILL_TITLES = {'gap': 'Cost gap skill score', 'obs_cost': 'Cost skill score', '
 MAP_CBAR_LABELS = {'gap': 'Cost Gap Improvement', 'obs_cost': 'Cost Improvement', 'exp_cost': 'Exp Cost Improvement'}
 PARAM_UNITS = {'threshold': ' °C'}
 
-CMAP_COLORBLIND = LinearSegmentedColormap.from_list('colorblind_diverging', (   # as plotting.cmap_colorblind
+CMAP_COLORBLIND = LinearSegmentedColormap.from_list('colorblind_diverging', (
     (0.000, (0.988, 0.016, 0.020)),
     (0.490, (1.000, 1.000, 1.000)),
     (1.000, (0.016, 0.000, 1.000))))
@@ -65,7 +65,7 @@ def plot_marginal(metrics, var='gap', mode='absolute', select=None, label_size=1
         panel = da.sel(dict(zip(params, values)))
         if mode == 'absolute':
             for m, marker, c in zip(panel.model.values, ['s', 'o'], ['C0', 'C1']):
-                ax.plot(x, panel.sel(model=m), marker=marker, linestyle='-', c=c, label='IFS' if m == 'ifs' else m)
+                ax.plot(x, panel.sel(model=m), marker=marker, linestyle='-', c=c, label=_model_label(m))
             ylabel = f'{VAR_LABELS[var]} (↓)'
         elif mode == 'relative':
             ax.plot(x, relative_improvement(panel), marker='o', linestyle='-', c='C0', label='rel. improvement')
@@ -116,7 +116,7 @@ def plot_heatmap(metrics, var='gap', lead=15, select=None, cmap=CMAP_COLORBLIND,
 
 
 def _diverging_cmap(vmin, vmax, vcenter=0):
-    """Red -> white (at vcenter) -> blue, asymmetric if vcenter is off-centre (as plotting.create_asymm_cmap)."""
+    """Red -> white (at vcenter) -> blue, asymmetric if vcenter is off-centre."""
     mid = (vcenter - vmin) / (vmax - vmin)
     cdict = {'red':   ((0.0, 1.0, 1.0), (mid, 1.0, 1.0), (1.0, 0.0, 0.0)),
              'green': ((0.0, 0.0, 0.0), (mid, 1.0, 1.0), (1.0, 0.0, 0.0)),
